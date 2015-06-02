@@ -4,23 +4,44 @@ $(document).ready(function() {
       todayHighlight: true,
   });
 
-  $('submit-user').on('click', function(){
+
+
+
+  // GET
+  $.ajax({
+    type: 'GET',
+    dataType: "json",
+    url: "http://localhost:3000/posts"
+
+  }).done(function(content){
+      $('.post-body').html(content)
+    console.log('GET!');
+
+  }).fail(function(){
+    console.log("fail");
+  });
+
+
+  // POST
+  $('#submit-new-user').on('click', function(){
       var user = {
-        first_name: $('#new-add-title').val(),
-        last_name: $('#new-ad-body').val(),
-        username: $('#new-ad-phonenumber').val() ,
-        email: $('#new-ad-email').val(),
-        password: $('#new-ad-category option:selected').text()
+        full_name: $('#user-full-name').val(),
+        username: $('#user-username').val() ,
+        email: $('#user-email').val(),
+        password: $('#user-password').text()
       };
 
       $.ajax({
         type: 'POST',
-        url: "http://localhost:3000/ads",
-        data: {ad: user}
-      }).done(function(){
+        dataType: "json",
+        url: "http://localhost:3000/posts",
+        data: {user: user}
+      }).done(function(response){
+
+        console.log(response);
 
       }).fail(function(){
-        alert("fail");
+        console.log("fail");
       });
   });
 
