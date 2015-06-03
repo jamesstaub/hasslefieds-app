@@ -4,58 +4,80 @@ $(document).ready(function() {
       todayHighlight: true,
   });
 
-
-
-
-  // GET
-  $.ajax({
-    type: 'GET',
-    dataType: "json",
-    url: "http://localhost:3000/posts"
-
-  }).done(function(content){
-      $('.post-body').html(content)
-    console.log('GET!');
-
-  }).fail(function(){
-    console.log("fail");
-  });
-
-
-  // POST
-  $('#submit-new-user').on('click', function(){
-      var user = {
-        full_name: $('#user-full-name').val(),
-        username: $('#user-username').val() ,
-        email: $('#user-email').val(),
-        password: $('#user-password').text()
-      };
-
+  // GET posts
+    $('#refresh-posts').on('click', function(){
       $.ajax({
-        type: 'POST',
+        type: 'GET',
         dataType: "json",
-        url: "http://localhost:3000/posts",
-        data: {user: user}
+        url: apiURL+"/posts"
+
       }).done(function(response){
+        response.forEach(function(e){
+          $('.post-body').append(e.title)
+        });
+      }).fail(function(){
+        console.log("fail you fucking miserable failure");
+      });
+    });
 
-        console.log(response);
+  // GET users
+    $('#refresh-users').on('click', function(){
+      $.ajax({
+        type: 'GET',
+        dataType: "json",
+        url: apiURL+"/users"
 
+      }).done(function(response){
+        response.forEach(function(e){
+          $('#user-list').append(e.full_name)
+        });
       }).fail(function(){
         console.log("fail");
       });
+    });
+
+
+
+  // POST post
+  $('#submit-new-post').on('click', function(){
+
+    $.post( apiURL+"/posts",
+    {
+      post: {
+        title: $('#post-title').val(),
+        body: $('#post-body').val()
+      }
+    }).done(function(res){
+      console.log(res);
+      console.log("done OK");
+    }).fail(function(){
+        console.log("fail");
+    });
   });
 
 
-    // $('#refresh-ads-button').click(function(){
-    //   // if select = all url = ads
-    //   // else url =
-    //   var resultsURL = 'http://localhost:3000/ads';
 
 
-    //   if($('#filter-ad-category option:selected').text() !== "All"){
-    //     var thisCategory = $('#filter-ad-category option:selected').text();
-    //     resultsURL = 'http://localhost:3000/filtered_ads/'+thisCategory
-    //   }
+  // POST user
+  $('#submit-new-user').on('click', function(){
+    $.post( apiURL+"/users",
+    {
+       user: {
+        full_name: $('#user-full-name').val(),
+        username: $('#user-username').val(),
+        email: $('#user-email').val(),
+        password: "password"
+      }
+    }).done(function(res){
+      console.log(res);
+      console.log("done OK");
+    }).fail(function(){
+        console.log("fail");
+    });
+  });
+
+
+
 
 
     //   $.ajax({
