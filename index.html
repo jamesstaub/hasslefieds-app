@@ -54,6 +54,24 @@
   <div class="container">
     <div class="row">
       <div class="col-md-6">
+       <h1>create post</h1>
+          <form>
+            <div class="form-group">
+              <label for="post-title">title</label>
+              <input id="post-title" type="text" class="form-control" placeholder="Post Title">
+            </div>
+            <div class="form-group">
+              <label for="post-body">Body</label>
+              <textarea id="post-body" type="text" class="form-control"  placeholder=""></textarea>
+            </div>
+            <!-- div class="input-daterange input-group" id="datepicker">
+              <input id="post-date-start"type="text" class="input-sm form-control" name="start" />
+              <span class="input-group-addon">to</span>
+              <input id="post-date-end" type="text" class="input-sm form-control" name="end" />
+            </div> -->
+            <div id="submit-new-post" class="btn btn-default">Submit</div>
+          </form>
+
         <h1>create user</h1>
         <form>
           <div class="row">
@@ -83,10 +101,6 @@
       </div>
       <div class="col-md-6">
 
-
-
-
-
       <script id="display-posts" type="text/x-handlebars-template">
         {{#each resource}}
             <article class="post">
@@ -99,6 +113,14 @@
                   <input data-post-id="{{id}}" class="input-reply form-control" type="text" placeholder="Reply">
                 </label>
                 <button data-post-id="{{id}}" type="submit" class="submit-reply btn btn-default">reply</button>
+                {{#each-reverse replies}}
+                <div class="replies-container">
+                  <h4>{{username}}:</h4><span>{{created_at}}</span>
+                  <p>{{body}}</p>
+
+                </div>
+                {{/each-reverse}}
+
 
             </article>
         {{/each}}
@@ -117,26 +139,6 @@
     </div>    <!-- row -->
     <div class="row">
       <div class="col-md-6">
-        <h1>create post</h1>
-          <form>
-            <div class="form-group">
-              <label for="post-title">title</label>
-              <input id="post-title" type="text" class="form-control" placeholder="Post Title">
-            </div>
-            <div class="form-group">
-              <label for="post-body">Body</label>
-              <textarea id="post-body" type="text" class="form-control"  placeholder=""></textarea>
-            </div>
-            <!-- div class="input-daterange input-group" id="datepicker">
-              <input id="post-date-start"type="text" class="input-sm form-control" name="start" />
-              <span class="input-group-addon">to</span>
-              <input id="post-date-end" type="text" class="input-sm form-control" name="end" />
-            </div> -->
-            <div id="submit-new-post" class="btn btn-default">Submit</div>
-
-
-
-          </form>
 
       </div>
       <div class="col-md-6">

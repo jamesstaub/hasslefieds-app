@@ -2,29 +2,19 @@
 
 var apiURL = "http://localhost:3000";
 
-// var displayPosts = (function(){
-//   var getPosts = function(){
-//     $.get( apiURL+"/posts").done(function(response){
-//       _renderPosts(response);
-//     });
-//   };
-//   var _renderPosts = function(displayPosts){
-//     // your code starts here
-//     var templatingFunction = Handlebars.compile($('#display-posts').html());
-//     var result = templatingFunction({
-//       posts: displayPosts
-//     });
-//     console.log(displayPosts)
-//     $('#posts-container').html(result);
-//   };
-//   return {
-//     indexPosts: getPosts
-//   };
-// })();
 
-// use the plural resource when passing in the argument
-// the handlebars script tag in the html must be named <script id="resource-container">
-// currently only works for nested resources like post: [{key: val, key, val}, {key: val, key, val}]
+Handlebars.registerHelper('each-reverse', function(context, options) {
+    var ret = '';
+    if (context && context.length > 0) {
+        for (var i = context.length - 1; i >= 0; i--) {
+            ret += options.fn(context[i]);
+        }
+    } else{
+        ret = options.inverse(this);
+    }
+    return ret;
+});
+
 var displayPosts = (function(resource){
   console.log(resource + ' is the name before setter');
   var setResourceName = function(resName){
@@ -46,7 +36,7 @@ var displayPosts = (function(resource){
   };
   return {
     setResourceName: setResourceName,
-    indexResource: getResource
+    renderHandlebars: getResource
   };
 })();
 
@@ -57,10 +47,10 @@ var displayPosts = (function(resource){
 
 
 $(document).ready(function(){
-  // set the name of the resource we are iterating over
+  // set the name of the resource we are iterating over in handlebars
   displayPosts.setResourceName("posts");
   // invoke the above IFFE on pageload, to get all the posts and render in handlebars
-  displayPosts.indexResource();
+  displayPosts.renderHandlebars();
 
 
 
@@ -75,12 +65,19 @@ $(document).ready(function(){
     {
       reply: {
         body: thisReplyVal,
-        post_id: thisPostID,
-        user_id:""
+        post_id: thisPostID
+        // user_id:
       }
     }).done(function(res){
-      console.log(res);
-    });
+      console.log("posted succesfully");
+      // then update the list of replies
+        displayPosts.setResourceName("posts");
+         displayPosts.renderHandlebars();
+
+
+    }).fail(function(res){
+      console.log("failed to post")
+    })
 
 
   });
