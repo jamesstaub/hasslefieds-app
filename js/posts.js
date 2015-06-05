@@ -2,7 +2,6 @@
 
 var apiURL = "http://localhost:3000";
 
-
 Handlebars.registerHelper('each-reverse', function(context, options) {
     var ret = '';
     if (context && context.length > 0) {
@@ -16,10 +15,10 @@ Handlebars.registerHelper('each-reverse', function(context, options) {
 });
 
 var displayPosts = (function(resource){
-  console.log(resource + ' is the name before setter');
+
   var setResourceName = function(resName){
     resource = resName;
-    console.log(resource + ' is the name after setter');
+
   }
   var getResource = function(){
     $.get( apiURL+"/"+resource).done(function(response){
@@ -44,8 +43,6 @@ var displayPosts = (function(resource){
 
 
 
-
-
 $(document).ready(function(){
   // set the name of the resource we are iterating over in handlebars
   displayPosts.setResourceName("posts");
@@ -58,8 +55,8 @@ $(document).ready(function(){
 //submit a comment on a post
   $('body').on('click', '.submit-reply', function(){
     var thisPostID = $(this).data('post-id');
-    var thisReplyVal = $('input.input-reply[data-post-id='+thisPostID+' ]').val();
-
+    var thisReplyVal = $('textarea.input-reply[data-post-id='+thisPostID+' ]').val();
+    console.log(thisReplyVal)
 // POST create a new reply
     $.post(apiURL+"/replies",
     {
@@ -71,16 +68,52 @@ $(document).ready(function(){
     }).done(function(res){
       console.log("posted succesfully");
       // then update the list of replies
+      console.log(res);
         displayPosts.setResourceName("posts");
-         displayPosts.renderHandlebars();
+        displayPosts.renderHandlebars();
 
 
     }).fail(function(res){
       console.log("failed to post")
     })
-
-
   });
+
+
+
+  // delete a post!
+  $('body').on('click', '.delete-post', function(){
+    var thisPostID = $(this).data('post-id');
+    $.ajax({
+      dataType: "json",
+      url: apiURL+"/posts/"+thisPostID,
+      type: 'DELETE'
+    }).done(function(response){
+        displayPosts.setResourceName("posts");
+        displayPosts.renderHandlebars();
+
+    }).fail(function(){
+      console.log("could not complete delete request");
+    });
+  });
+
+
+  // delete a comment!
+  $('body').on('click', '.delete-reply', function(){
+    var thisReplyID = $(this).data('reply-id');
+    $.ajax({
+      dataType: "json",
+      url: apiURL+"/replies/"+thisReplyID,
+      type: 'DELETE'
+    }).done(function(response){
+        displayPosts.setResourceName("posts");
+        displayPosts.renderHandlebars();
+
+    }).fail(function(){
+      console.log("could not complete delete request");
+    });
+  });
+
+
 
 
 });
