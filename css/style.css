@@ -36,6 +36,6 @@ label{
   float: right;
 }
 
-#login-alert{
+#login-alert, #signup-alert{
   margin-top: 10px;
 }

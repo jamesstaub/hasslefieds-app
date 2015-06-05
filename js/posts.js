@@ -22,6 +22,7 @@ var displayPosts = (function(resource){
   }
   var getResource = function(){
     $.get( apiURL+"/"+resource).done(function(response){
+      console.log(response);
       _renderResourceEach(response);
     });
   };
@@ -51,12 +52,36 @@ $(document).ready(function(){
 
 
 
+  // POST create a new post
+  $('#new-post-submit').on('click', function(){
+
+    $.ajax({
+      url: apiURL+"/posts",
+      type: 'POST',
+      data: {post: {
+            title: $('#post-title').val(),
+            body: $('#post-body').val(),
+            start_date: $('#start_date').val(),
+            end_date: $('#end_date').val()
+          }},
+      headers: { Authorization: 'Token token=' + localStorage.getItem('token') }
+    }).done(function(res){
+      // clear the fields
+      $('#create-post-form input, #create-post-form textarea').val('');
+        displayPosts.setResourceName("posts");
+        displayPosts.renderHandlebars();
+    }).fail(function(){
+        console.log("fail");
+    });
+  });
+
+
 
 //submit a comment on a post
   $('body').on('click', '.submit-reply', function(){
     var thisPostID = $(this).data('post-id');
     var thisReplyVal = $('textarea.input-reply[data-post-id='+thisPostID+' ]').val();
-    console.log(thisReplyVal)
+
 // POST create a new reply
     $.post(apiURL+"/replies",
     {
@@ -68,10 +93,9 @@ $(document).ready(function(){
     }).done(function(res){
       console.log("posted succesfully");
       // then update the list of replies
-      console.log(res);
+
         displayPosts.setResourceName("posts");
         displayPosts.renderHandlebars();
-
 
     }).fail(function(res){
       console.log("failed to post")
@@ -86,7 +110,8 @@ $(document).ready(function(){
     $.ajax({
       dataType: "json",
       url: apiURL+"/posts/"+thisPostID,
-      type: 'DELETE'
+      type: 'DELETE',
+      headers: { Authorization: 'Token token=' + localStorage.getItem('token') }
     }).done(function(response){
         displayPosts.setResourceName("posts");
         displayPosts.renderHandlebars();
