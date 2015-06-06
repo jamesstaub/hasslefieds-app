@@ -7,11 +7,11 @@
   <script src="node_modules/bootstrap/dist/js/bootstrap.min.js" type="text/javascript"></script>
   <script src="bootstrap-datepicker/js/bootstrap-datepicker.min.js" type="text/javascript"></script>
   <link rel="stylesheet" type="text/css" href="bootstrap-datepicker/css/bootstrap-datepicker.css">
+  <link rel="stylesheet" type="text/css" href="css/style.css">
   <script src="js/handlebars.js"></script>
-
   <script src="js/posts.js" type="text/javascript"></script>
   <script src="js/app.js" type="text/javascript"></script>
-  <link rel="stylesheet" type="text/css" href="css/style.css">
+
 
 </head>
 <body>
@@ -31,17 +31,16 @@
       <!-- Collect the nav links, forms, and other content for toggling -->
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav navbar-right">
-          <li><a href="#" data-toggle="modal" data-target=".bs-signup-modal-lg">sign up</a></li>
-           <li class="login-link"><a href="#" data-toggle="modal" data-target=".bs-login-modal-lg">login</a></li>
-
+          <li class="signup-link"><a href="#" data-toggle="modal" data-target=".bs-signup-modal-lg">sign up</a></li>
+          <li class="login-link"><a href="#" data-toggle="modal" data-target=".bs-login-modal-lg">login</a></li>
           <li class="me dropdown">
-          <a href="#" class="user-identity dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="caret"></span></a>
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="caret"></span><span class="user-identity"></span></a>
             <ul class="dropdown-menu" role="menu">
-              <li class="logout-link"><a href="#">log out</a></li>
-              <li><a href="#">Another action</a></li>
-              <li><a href="#">Something else here</a></li>
+
+              <li><a href="#">...</a></li>
+              <li><a href="#">...</a></li>
               <li class="divider"></li>
-              <li><a href="#">Separated link</a></li>
+              <li class="logout-link"><a href="#">log out</a></li>
             </ul>
           </li>
         </ul>
@@ -149,7 +148,7 @@
               <h2>replies:</h2>
               {{#each-reverse replies}}
                 <div class="replies-container">
-                  <span><small>by: </small>{{username}}pass username </span><small>on: </small><span>{{format_date}}</span>
+                  <span><small>by: </small>{{username}}</span><small>on: </small><span>{{format_date}}</span>
                   <small class="delete-reply" data-reply-id="{{id}}">delete</small>
                   <p class="lead">{{body}}</p>
 

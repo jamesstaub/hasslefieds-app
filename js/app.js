@@ -1,12 +1,29 @@
-var me = localStorage.getItem('username');
+
+
 
 $(document).ready(function() {
-if(me){
-   $('.user-identity').show();
-   $('.user-identity').html(localStorage.getItem('username'));
-   // $('.login-link').hide();
+
+
+// set the name of the resource we are iterating over in handlebars
+displayPosts.setResourceName("posts");
+// invoke the above IFFE on pageload, to get all the posts and render in handlebars
+displayPosts.renderHandlebars();
+
+var me = localStorage.getItem('username');
+
+
+// $('.me').hide();
+// $('.login-link').hide();
+
+if(me !== "null"){
+  $('.user-identity').html(localStorage.getItem('username'));
+  $('.me').show();
+  $('.login-link').hide();
+
 }else{
-  // $('login-link').show();
+  console.log("no one logged in")
+  $('.me').hide();
+  $('login-link').show();
 }
 
   $('#set-post-dates .input-daterange').datepicker({
@@ -101,8 +118,11 @@ if(me){
           localStorage.setItem('token', data['token']);
           localStorage.setItem('username', data['username']);
           console.log(data);
+          $('.signup-link').hide();
+          $('.login-link').hide();
+          $('.me').show();
           $('#login-alert').html('<div id="login-alert" class="alert alert-success role="alert"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="false"></span><span class="sr-only">Error:</span> you\'re now logged in</div>');
-          $('.me').prepend('<a href="#" class="user-identity dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">'+data['username']+'<span class="caret"></span></a>')
+          $('.user-identity').html(data['username'])
           setTimeout(function(){
             $('#login-modal').modal('hide');
           }, 500);
@@ -124,13 +144,17 @@ if(me){
         });
       });
 
-  $('.logout-link').on('click', function(){
-  $('.user-identity').hide();
-    // $('login-link').show();
-    localStorage.setItem('token', null);
-    localStorage.setItem('username', null);
-    console.log(localStorage.setItem('username', null));
+    $('.logout-link').on('click', function(){
+      $('.me').hide();
+      $('.user-identity').html('');
+      $('.login-link').show();
+      $('.signup-link').show();
 
+
+      // $('login-link').show();
+      localStorage.setItem('token', null);
+      localStorage.setItem('username', null);
+      console.log(localStorage.setItem('username', null));
   });
 
 
@@ -160,25 +184,25 @@ if(me){
 // create a form data object
 // this will replace existing submit post request
 // add the header to this request
-$('#submitpost').on('click', function(e){
-  // first array index is DOM object which has .files method. targets the first file
-    var file = $('#file')[0].files[0];
-    var finished = new FormData();
-    finished.append('image', file);
-    // column name | column value
-    finished.append('title', 'title');
-    finished.append('body', 'title');
-    // etc for post properties
+// $('#submitpost').on('click', function(e){
+//   // first array index is DOM object which has .files method. targets the first file
+//     var file = $('#file')[0].files[0];
+//     var finished = new FormData();
+//     finished.append('image', file);
+//     // column name | column value
+//     finished.append('title', 'title');
+//     finished.append('body', 'title');
+//     // etc for post properties
 
 
-    $.ajax({
-      url: 'http://localhost:3000/posts',
-      data: finished,
-      type: 'POST',
-      header: //header stuff here
-      // this might fuck with the header
-      contentType: false,
-      cache: false,
-      processData: false
-    });
-  });
+//     $.ajax({
+//       url: 'http://localhost:3000/posts',
+//       data: finished,
+//       type: 'POST',
+//       header: //header stuff here
+//       // this might fuck with the header
+//       contentType: false,
+//       cache: false,
+//       processData: false
+//     });
+//   });

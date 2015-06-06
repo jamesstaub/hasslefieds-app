@@ -22,7 +22,7 @@ var displayPosts = (function(resource){
   }
   var getResource = function(){
     $.get( apiURL+"/"+resource).done(function(response){
-      console.log(response);
+
       _renderResourceEach(response);
     });
   };
@@ -77,19 +77,21 @@ $(document).ready(function(){
 
 
 
-//submit a comment on a post
+//submit a reply on a post
   $('body').on('click', '.submit-reply', function(){
     var thisPostID = $(this).data('post-id');
     var thisReplyVal = $('textarea.input-reply[data-post-id='+thisPostID+' ]').val();
 
-// POST create a new reply
-    $.post(apiURL+"/replies",
-    {
-      reply: {
-        body: thisReplyVal,
-        post_id: thisPostID
-        // user_id:
-      }
+     $.ajax({
+        url: apiURL+"/replies",
+        type: 'POST',
+        data: {
+          reply: {
+          body: thisReplyVal,
+          post_id: thisPostID
+          // user_id:
+        }},
+      headers: { Authorization: 'Token token=' + localStorage.getItem('token') }
     }).done(function(res){
       console.log("posted succesfully");
       // then update the list of replies
@@ -99,8 +101,11 @@ $(document).ready(function(){
 
     }).fail(function(res){
       console.log("failed to post")
-    })
+    });
   });
+
+
+
 
 
 
@@ -128,7 +133,8 @@ $(document).ready(function(){
     $.ajax({
       dataType: "json",
       url: apiURL+"/replies/"+thisReplyID,
-      type: 'DELETE'
+      type: 'DELETE',
+      headers: { Authorization: 'Token token=' + localStorage.getItem('token') }
     }).done(function(response){
         displayPosts.setResourceName("posts");
         displayPosts.renderHandlebars();

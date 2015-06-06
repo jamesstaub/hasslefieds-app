@@ -39,3 +39,9 @@ label{
 #login-alert, #signup-alert{
   margin-top: 10px;
 }
+
+
+
+.login-link, .me, {
+  display:none;
+}
