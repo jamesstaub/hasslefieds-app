@@ -4,46 +4,16 @@
 $(document).ready(function() {
 
 
-// set the name of the resource we are iterating over in handlebars
-displayPosts.setResourceName("posts");
-// invoke the above IFFE on pageload, to get all the posts and render in handlebars
-displayPosts.renderHandlebars();
+  // set the name of the resource we are iterating over in handlebars
+  displayPosts.setResourceName("posts");
+  // invoke the above IFFE on pageload, to get all the posts and render in handlebars
+  // pass the allowCreateComent method as a callback, to ensure comment template is added after the posts get rendered
+  authenticateDOM.updateNavBar();
+  displayPosts.renderHandlebars(authenticateDOM.allowCreateComment);
 
-var me = localStorage.getItem('username');
 
 
-// $('.me').hide();
-// $('.login-link').hide();
 
-if(me !== "null"){
-  $('.user-identity').html(localStorage.getItem('username'));
-  $('.me').show();
-  $('.login-link').hide();
-
-}else{
-  console.log("no one logged in")
-  $('.me').hide();
-  $('login-link').show();
-}
-
-  $('#set-post-dates .input-daterange').datepicker({
-    startDate: "today",
-    todayHighlight: true
-  });
-
-  // GET list of users
-      // $.ajax({
-      //   type: 'GET',
-      //   dataType: "json",
-      //   url: apiURL+"/users"
-
-      // }).done(function(response){
-      //   response.forEach(function(e){
-      //     $('#user-list').append(e.full_name)
-      //   });
-      // }).fail(function(){
-      //   console.log("fail");
-      // });
 
   // POST create new user
   $('#signup-submit').on('click', function(){
@@ -114,7 +84,6 @@ if(me !== "null"){
 
         if(textStatus === 'success'){
           // Successful login!
-          console.log(data);
           localStorage.setItem('token', data['token']);
           localStorage.setItem('username', data['username']);
           console.log(data);
@@ -125,6 +94,7 @@ if(me !== "null"){
           $('.user-identity').html(data['username'])
           setTimeout(function(){
             $('#login-modal').modal('hide');
+            displayPosts.renderHandlebars(authenticateDOM.allowCreateComment);
           }, 500);
 
 
@@ -136,48 +106,22 @@ if(me !== "null"){
           }
 
         }).fail(function(jqxhr, textStatus, errorThrown){
-
           $('#login-alert').html('<div id="login-alert" class="alert alert-danger" role="alert"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="false"></span><span class="sr-only">Error:</span> login failed</div>');
           console.log(textStatus);
           console.log(errorThrown);
-
         });
       });
-
+    // POST logout
     $('.logout-link').on('click', function(){
-      $('.me').hide();
-      $('.user-identity').html('');
-      $('.login-link').show();
-      $('.signup-link').show();
-
-
-      // $('login-link').show();
       localStorage.setItem('token', null);
       localStorage.setItem('username', null);
-      console.log(localStorage.setItem('username', null));
+      authenticateDOM.updateNavBar();
+      displayPosts.renderHandlebars(authenticateDOM.allowCreateComment);
+
   });
 
 
-    //   $.ajax({
-    //     type:'GET',
-    //     url:resultsURL
-    //   }).done(function(response){
-    //     $('#ad-contents').html('');
-    //     console.log(response);
-    //     response.forEach(function(ad){
-    //       var addHTML = "<p><b> " + ad.title + " </b> " + ad.body + "</b>" + ad.phonenumber + "</b>" +  " " +ad.email + " " +ad.category + " </p>";
-    //       $('#ad-contents').append(addHTML);
-    //     });
-    //   }).fail(function(){
-    //     $('#ad-contents').append("error errror i say it's an errrrrrr");
-    //   });
-    // });
-
-
 });
-
-
-
 
 
 
