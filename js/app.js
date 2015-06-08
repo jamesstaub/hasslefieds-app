@@ -13,9 +13,6 @@ $(document).ready(function() {
   // displayPosts.renderHandlebars(authenticateDOM.allowCreateComment);
   displayPosts.renderHandlebars();
 
-
-
-
 });
 
 

@@ -74,9 +74,9 @@ var displayPosts = (function(resource){
       if(_userloggedIn()){
       	if(!$('#top').has('#create-post-form')){$('#create-post-form').remove();}
         $('#top').prepend(
-        '<div id="create-post-form" class="col-md-6"> \
-          <h1>create post</h1> \
+        '<div id="create-post-form"> \
             <form id="create-post-form"> \
+            <h2>new post:</h2>\
               <div class="form-group"> \
                 <label for="create-post-title">Title</label> \
                 <input type="text" id="create-post-title" class="input-sm form-control"> \
@@ -138,7 +138,6 @@ var displayPosts = (function(resource){
 			$('.delete-post, .delete-reply').each(function(){
 				var uid = $(this).data('user-id');
 				uid = parseInt(uid);
-				console.log(uid + ' ' + myid);
 				if(uid === myid){
 					$(this).show();
 
@@ -154,6 +153,8 @@ var displayPosts = (function(resource){
        var me = localStorage.getItem('username');
        return me !== "null";
     };
+
+
     return {
       updateNavBar: updateNavBar,
       allowCreatePost: allowCreatePost,
@@ -175,7 +176,7 @@ var validateInputs = (function(){
 		var validCount = 0;
 		for (var i=0; i<inputs.length; i++){
 
-			if(!$('#'+inputs[i][0]+'').val()){
+			if(!$(inputs[i][0]+'').val()){
 				_alert(inputs[i]);
 			}else{
 				validCount ++;

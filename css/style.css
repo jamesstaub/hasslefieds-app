@@ -1,21 +1,38 @@
 body{
+  background-color: #333;
 }
 
 h1, h2{
   margin: 0;
+
 }
 
 /* Display Posts*/
 article, section.post-replies{
-  margin: 10px 10px 20px 10px;
-  padding: 10px;
+  margin: 0px 10px 20px 10px;
+  padding: 20px;
 }
+
+#create-post-form{
+
+  background-color: #ddd;
+  padding: 10px;
+  margin-bottom: 20px;
+}
+#create-post-body{
+  height: 200px;
+}
+
 
 .post-replies{
   background-color: #eee;
 }
 .post-reply-form{
   margin: 10px 0;
+}
+#close-editor{
+  font-size: 3em;
+  float: right;
 }
 
 label{
@@ -29,13 +46,11 @@ label{
 
 .post-block{
   background-color: #ddd;
-  padding: 10px;
+
   margin-bottom:20px;
 }
 
-#create-post-body{
-  height: 200px;
-}
+
 
 .submit-reply{
   width:100%

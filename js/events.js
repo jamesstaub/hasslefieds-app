@@ -1,5 +1,12 @@
 $(document).ready(function(){
 
+
+
+  $('#toggle-post-editor').on('click', function(){
+    $('#create-post-form').show();
+
+  });
+
   // POST create a new post
   $('body').on('click','#new-post-submit', function(){
     if(validateInputs.post()){
