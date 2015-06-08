@@ -23,7 +23,6 @@ article, section.post-replies{
   height: 200px;
 }
 
-
 .post-replies{
   background-color: #eee;
 }
@@ -50,8 +49,6 @@ label{
   margin-bottom:20px;
 }
 
-
-
 .submit-reply{
   width:100%
 }
@@ -65,7 +62,6 @@ label{
 #login-alert, #signup-alert{
   margin-top: 10px;
 }
-
 
 
 .login-link, .me, {
