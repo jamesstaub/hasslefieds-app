@@ -33,14 +33,26 @@ var displayPosts = (function(resource){
     });
     $('#'+resource+'-container').html(result);
 
-
+// DOM updates after handlebars renders
 	authenticateDOM.allowCreateComment();
     authenticateDOM.allowDeleteContent();
+
+    Date.prototype.addDays = function(days){
+	    var dat = new Date(this.valueOf());
+	    dat.setDate(dat.getDate() + days);
+	    return dat;
+	}
+
+	var today = new Date();
+	var defaultEnd = today.addDays(20);
+
+    $('#start_date').datepicker('setDate', today);
+    $('#end_date').datepicker('setDate', defaultEnd);
 
   };
   return {
     setResourceName: setResourceName,
-    renderHandlebars: getResource,
+    renderHandlebars: getResource
   };
 })();
 
@@ -58,7 +70,9 @@ var displayPosts = (function(resource){
       }
     }
     var allowCreatePost = function(){
+
       if(_userloggedIn()){
+      	if(!$('#top').has('#create-post-form')){$('#create-post-form').remove();}
         $('#top').prepend(
         '<div id="create-post-form" class="col-md-6"> \
           <h1>create post</h1> \
@@ -118,17 +132,19 @@ var displayPosts = (function(resource){
 
     var allowDeleteContent = function(){
     	// hides/shows delete buttons on given post/reply if the logged in user matches the token attached to that post.
+
 			var myid = localStorage.getItem('uid');
 			myid = parseInt(myid)
 			$('.delete-post, .delete-reply').each(function(){
 				var uid = $(this).data('user-id');
 				uid = parseInt(uid);
+				console.log(uid + ' ' + myid);
 				if(uid === myid){
 					$(this).show();
-					console.log()
+
 				}else{
-					console.log("should hide now")
 					$(this).hide();
+
 				}
 			});
 
@@ -147,90 +163,62 @@ var displayPosts = (function(resource){
   })();
 
 
-$(document).ready(function(){
-
-  // POST create a new post
-  $('body').on('click','#new-post-submit', function(){ //bubble up here
-    $.ajax({
-      url: apiURL+"/posts",
-      type: 'POST',
-      data: {post: {
-            title: $('#create-post-title').val(),
-            body: $('#create-post-body').val(),
-            start_date: $('#start_date').val(),
-            end_date: $('#end_date').val()
-          }},
-      headers: { Authorization: 'Token token=' + localStorage.getItem('token') }
-    }).done(function(res){
-      // clear the fields
-      $('#create-post-form input, #create-post-form textarea').val('');
-        displayPosts.setResourceName("posts");
-        displayPosts.renderHandlebars(authenticateDOM.allowCreateComment);
-    }).fail(function(){
-        console.log("failed to create post");
-    });
-  });
 
 
+var validateInputs = (function(){
 
-// POST submit a reply on a post
-  $('body').on('click', '.submit-reply', function(){
-    var thisPostID = $(this).data('post-id');
-    var thisReplyVal = $('textarea.input-reply[data-post-id='+thisPostID+' ]').val();
-     $.ajax({
-        url: apiURL+"/replies",
-        type: 'POST',
-        data: {
-          reply: {
-          body: thisReplyVal,
-          post_id: thisPostID
-        }},
-      headers: { Authorization: 'Token token=' + localStorage.getItem('token') }
-    }).done(function(res){
-      console.log("set-post-dates succesfully");
-      // then update the list of posts and replies
-        displayPosts.setResourceName("posts");
-        displayPosts.renderHandlebars(authenticateDOM.allowCreateComment);
-    }).fail(function(res){
-      console.log("failed to post");
-    });
-  });
+	var post = function(){
+		$('.validation-alert').remove();
+		// form input [id's, names for alert]
+		var inputs = [['#create-post-title', 'Title'], ['#start_date', 'Start Date'], ['#end_date', 'End Date'], ['#create-post-body', 'Post Body']];
+
+		var validCount = 0;
+		for (var i=0; i<inputs.length; i++){
+
+			if(!$('#'+inputs[i][0]+'').val()){
+				_alert(inputs[i]);
+			}else{
+				validCount ++;
+			}
+		}
+		if(validCount === (inputs.length)){
+			return true;
+		}else{
+			return false;
+		}
+	};
+
+	var reply = function(){
+		$('.validation-alert').remove();
+		var input = ['.input-reply', 'Reply'];
+
+		if(!$(input[0]).val()){
+			_alert(input);
+			return false;
+		}else{
+			return true;
+		}
+	};
+
+	var login = function(){
+		// to do
+	};
+
+	var signup = function(){
+		// to do
+	};
+
+	var _alert = function(e){
+		var thiselement = e[0]
+		$(thiselement).after('<div class="validation-alert alert alert-danger" role="alert"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span><span class="sr-only">Error: </span>'+e[1]+' is empty</div>');
+	}
 
 
-  // delete a post!
-  $('body').on('click', '.delete-post', function(){
-    var thisPostID = $(this).data('post-id');
-    $.ajax({
-      dataType: "json",
-      url: apiURL+"/posts/"+thisPostID,
-      type: 'DELETE',
-      headers: { Authorization: 'Token token=' + localStorage.getItem('token') }
-    }).done(function(response){
-        displayPosts.setResourceName("posts");
-        displayPosts.renderHandlebars(authenticateDOM.allowCreateComment);
+	return {
+		post: post,
+		reply: reply,
+		login: login,
+		signup: signup
+	}
 
-    }).fail(function(){
-      console.log("could not complete delete request");
-    });
-  });
-
-
-  // delete a comment!
-  $('body').on('click', '.delete-reply', function(){
-    var thisReplyID = $(this).data('reply-id');
-    $.ajax({
-      dataType: "json",
-      url: apiURL+"/replies/"+thisReplyID,
-      type: 'DELETE',
-      headers: { Authorization: 'Token token=' + localStorage.getItem('token') }
-    }).done(function(response){
-        displayPosts.setResourceName("posts");
-        displayPosts.renderHandlebars();
-
-    }).fail(function(){
-      console.log("could not complete delete request");
-    });
-  });
-
-});
-
+})();

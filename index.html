@@ -10,6 +10,7 @@
   <link rel="stylesheet" type="text/css" href="css/style.css">
   <script src="js/handlebars.js"></script>
   <script src="js/functions.js" type="text/javascript"></script>
+  <script src="js/events.js" type="text/javascript"></script>
   <script src="js/app.js" type="text/javascript"></script>
 
 
@@ -36,9 +37,6 @@
           <li class="me dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="caret"></span><span class="user-identity"></span></a>
             <ul class="dropdown-menu" role="menu">
-
-              <li><a href="#">...</a></li>
-              <li><a href="#">...</a></li>
               <li class="divider"></li>
               <li class="logout-link"><a href="#">log out</a></li>
             </ul>
@@ -125,7 +123,7 @@
               {{#each-reverse replies}}
                 <div class="reply-container" data-post-id="{{post_id}}">
                   <span><small>by: </small><strong>{{username}} </strong></span><small>on: </small><span>{{format_date}}</span>
-                  <small class="delete-reply" data-user-id="{{user.id}}"data-reply-id="{{id}}">delete</small>
+                  <small class="delete-reply" data-user-id="{{user_id}}"data-reply-id="{{id}}">delete</small>
                   <p class="lead">{{body}}</p>
                 </div>
               {{/each-reverse}}
