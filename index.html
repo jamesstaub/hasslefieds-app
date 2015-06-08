@@ -25,7 +25,7 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="#">BostonHassle {classifieds}</a>
+        <a class="navbar-brand" href="#">-_-</a>
       </div>
 
       <!-- Collect the nav links, forms, and other content for toggling -->
@@ -111,7 +111,10 @@
         <div class="post-block">
             <article class="post">
                 <h2>{{title}}</h2>
-                <small> posted by: <strong>{{user.username}}</strong></small><small class="delete-post" data-post-id="{{id}}">delete</small>
+                <small> posted by: <strong>{{user.username}}</strong></small>
+
+                  <small class="delete-post" data-user-id="{{user.id}}" data-post-id="{{id}}">delete</small>
+
                 <p class="lead">{{body}}</p>
             </article>
 
@@ -120,9 +123,9 @@
             {{#if reply_count}}
               <h2>replies:</h2>
               {{#each-reverse replies}}
-                <div class="replies-container">
+                <div class="reply-container" data-post-id="{{post_id}}">
                   <span><small>by: </small><strong>{{username}} </strong></span><small>on: </small><span>{{format_date}}</span>
-                  <small class="delete-reply" data-reply-id="{{id}}">delete</small>
+                  <small class="delete-reply" data-user-id="{{user.id}}"data-reply-id="{{id}}">delete</small>
                   <p class="lead">{{body}}</p>
                 </div>
               {{/each-reverse}}
@@ -130,7 +133,6 @@
             </section>
         </div>
         {{/each-reverse}}
-
 
       </script>
 

@@ -9,8 +9,9 @@ $(document).ready(function() {
   // invoke the above IFFE on pageload, to get all the posts and render in handlebars
   // pass the allowCreateComent method as a callback, to ensure comment template is added after the posts get rendered
   authenticateDOM.updateNavBar();
-  displayPosts.renderHandlebars(authenticateDOM.allowCreateComment);
-
+  authenticateDOM.allowCreatePost();
+  // displayPosts.renderHandlebars(authenticateDOM.allowCreateComment);
+  displayPosts.renderHandlebars();
 
 
 
@@ -86,6 +87,7 @@ $(document).ready(function() {
           // Successful login!
           localStorage.setItem('token', data['token']);
           localStorage.setItem('username', data['username']);
+          localStorage.setItem('uid', data['uid']);
           console.log(data);
           $('.signup-link').hide();
           $('.login-link').hide();
@@ -94,7 +96,9 @@ $(document).ready(function() {
           $('.user-identity').html(data['username'])
           setTimeout(function(){
             $('#login-modal').modal('hide');
+            authenticateDOM.allowCreatePost();
             displayPosts.renderHandlebars(authenticateDOM.allowCreateComment);
+
           }, 500);
 
 
@@ -115,12 +119,12 @@ $(document).ready(function() {
     $('.logout-link').on('click', function(){
       localStorage.setItem('token', null);
       localStorage.setItem('username', null);
+      localStorage.setItem('uid', null);
       authenticateDOM.updateNavBar();
+      authenticateDOM.allowCreatePost();
       displayPosts.renderHandlebars(authenticateDOM.allowCreateComment);
 
   });
-
-
 });
 
 

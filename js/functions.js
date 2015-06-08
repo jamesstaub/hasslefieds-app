@@ -14,27 +14,33 @@ Handlebars.registerHelper('each-reverse', function(context, options) {
     return ret;
 });
 
+
+
 var displayPosts = (function(resource){
   var setResourceName = function(resName){
     resource = resName;
   }
-  var getResource = function(callback){
+  var getResource = function(){
     $.get( apiURL+"/"+resource).done(function(response){
-      _renderResourceEach(response, callback);
+      _renderResourceEach(response);
     });
 
   };
-  var _renderResourceEach = function(renderedResource, callback){
+  var _renderResourceEach = function(renderedResource){
     var templatingFunction = Handlebars.compile($('#display-'+resource).html());
     var result = templatingFunction({
       resource: renderedResource
     });
     $('#'+resource+'-container').html(result);
-    callback();
+
+
+	authenticateDOM.allowCreateComment();
+    authenticateDOM.allowDeleteContent();
+
   };
   return {
     setResourceName: setResourceName,
-    renderHandlebars: getResource
+    renderHandlebars: getResource,
   };
 })();
 
@@ -58,8 +64,8 @@ var displayPosts = (function(resource){
           <h1>create post</h1> \
             <form id="create-post-form"> \
               <div class="form-group"> \
-                <label for="post-title">Title</label> \
-                <input type="text" id="post-title" class="input-sm form-control"> \
+                <label for="create-post-title">Title</label> \
+                <input type="text" id="create-post-title" class="input-sm form-control"> \
                 <div class="row"> \
                   <div class="col-md-6">\
                     <div id="set-post-dates"> \
@@ -74,13 +80,15 @@ var displayPosts = (function(resource){
                 </div> \
               </div> \
               <div class="form-group"> \
-                <label for="post-body">Body</label> \
+                <label for="create-post-body">Body</label> \
                 <textarea id="create-post-body" type="text" class="form-control"  placeholder=""></textarea> \
               </div> \
                 <div id="new-post-submit" class="btn btn-default">Submit</div> \
             </form> \
         </div>'
         );
+      } else{
+        $('#create-post-form').remove()
       }
 
       // config date picker
@@ -95,7 +103,8 @@ var displayPosts = (function(resource){
       if(_userloggedIn()){
         $('.post-replies').each(function(){
           var thisPostID = $(this).data('post-id');
-          $('.post-replies').prepend(
+          // $('.post-reply-form').remove();
+          $(this).prepend(
             '<div class="post-reply-form"> \
               <label>Leave a reply \
                 <textarea data-post-id="'+thisPostID+'" class="input-reply form-control" type="text" placeholder="your reply here"></textarea> \
@@ -105,8 +114,26 @@ var displayPosts = (function(resource){
           );
         });
       }
+    };
+
+    var allowDeleteContent = function(){
+    	// hides/shows delete buttons on given post/reply if the logged in user matches the token attached to that post.
+			var myid = localStorage.getItem('uid');
+			myid = parseInt(myid)
+			$('.delete-post, .delete-reply').each(function(){
+				var uid = $(this).data('user-id');
+				uid = parseInt(uid);
+				if(uid === myid){
+					$(this).show();
+					console.log()
+				}else{
+					console.log("should hide now")
+					$(this).hide();
+				}
+			});
 
     };
+
     var _userloggedIn = function(){
        var me = localStorage.getItem('username');
        return me !== "null";
@@ -114,7 +141,8 @@ var displayPosts = (function(resource){
     return {
       updateNavBar: updateNavBar,
       allowCreatePost: allowCreatePost,
-      allowCreateComment: allowCreateComment
+      allowCreateComment: allowCreateComment,
+      allowDeleteContent: allowDeleteContent
     };
   })();
 
@@ -122,13 +150,13 @@ var displayPosts = (function(resource){
 $(document).ready(function(){
 
   // POST create a new post
-  $('#new-post-submit').on('click', function(){
+  $('body').on('click','#new-post-submit', function(){ //bubble up here
     $.ajax({
       url: apiURL+"/posts",
       type: 'POST',
       data: {post: {
-            title: $('#post-title').val(),
-            body: $('#post-body').val(),
+            title: $('#create-post-title').val(),
+            body: $('#create-post-body').val(),
             start_date: $('#start_date').val(),
             end_date: $('#end_date').val()
           }},
@@ -137,7 +165,7 @@ $(document).ready(function(){
       // clear the fields
       $('#create-post-form input, #create-post-form textarea').val('');
         displayPosts.setResourceName("posts");
-        displayPosts.renderHandlebars();
+        displayPosts.renderHandlebars(authenticateDOM.allowCreateComment);
     }).fail(function(){
         console.log("failed to create post");
     });
@@ -159,10 +187,10 @@ $(document).ready(function(){
         }},
       headers: { Authorization: 'Token token=' + localStorage.getItem('token') }
     }).done(function(res){
-      console.log("posted succesfully");
+      console.log("set-post-dates succesfully");
       // then update the list of posts and replies
         displayPosts.setResourceName("posts");
-        displayPosts.renderHandlebars();
+        displayPosts.renderHandlebars(authenticateDOM.allowCreateComment);
     }).fail(function(res){
       console.log("failed to post");
     });
@@ -179,7 +207,7 @@ $(document).ready(function(){
       headers: { Authorization: 'Token token=' + localStorage.getItem('token') }
     }).done(function(response){
         displayPosts.setResourceName("posts");
-        displayPosts.renderHandlebars();
+        displayPosts.renderHandlebars(authenticateDOM.allowCreateComment);
 
     }).fail(function(){
       console.log("could not complete delete request");
