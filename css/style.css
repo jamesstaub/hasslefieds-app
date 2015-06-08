@@ -1,4 +1,73 @@
 body{
+  background-color: #333;
+}
+
+h1, h2{
+  margin: 0;
+
+}
+
+/* Display Posts*/
+article, section.post-replies{
+  margin: 0px 10px 20px 10px;
+  padding: 20px;
+}
+
+#create-post-form{
+
+  background-color: #ddd;
+  padding: 10px;
+  margin-bottom: 20px;
+}
+#create-post-body{
+  height: 200px;
+}
 
 
+.post-replies{
+  background-color: #eee;
+}
+.post-reply-form{
+  margin: 10px 0;
+}
+#close-editor{
+  font-size: 3em;
+  float: right;
+}
+
+label{
+  width: 100%;
+  margin-top: 10px;
+}
+
+.modal-content{
+  padding:20px;
+}
+
+.post-block{
+  background-color: #ddd;
+
+  margin-bottom:20px;
+}
+
+
+
+.submit-reply{
+  width:100%
+}
+
+.delete-reply, .delete-post {
+  color:#FF1111;
+  cursor:pointer;
+  float: right;
+}
+
+#login-alert, #signup-alert{
+  margin-top: 10px;
+}
+
+
+
+.login-link, .me, {
+  display:none;
 }
