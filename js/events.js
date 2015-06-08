@@ -1,12 +1,5 @@
 $(document).ready(function(){
 
-
-
-  $('#toggle-post-editor').on('click', function(){
-    $('#create-post-form').show();
-
-  });
-
   // POST create a new post
   $('body').on('click','#new-post-submit', function(){
     if(validateInputs.post()){
@@ -31,11 +24,9 @@ $(document).ready(function(){
     }
   });
 
-
-
 // POST submit a reply on a post
   $('body').on('click', '.submit-reply', function(){
-    if (validateInputs.reply()) {
+    // if (validateInputs.reply()) { Disabled comment validation, pending bug fix.
       var thisPostID = $(this).data('post-id');
       var thisReplyVal = $('textarea.input-reply[data-post-id='+thisPostID+' ]').val();
        $.ajax({
@@ -55,7 +46,7 @@ $(document).ready(function(){
       }).fail(function(res){
         console.log("failed to post");
       });
-    };
+    // };
   });
 
 
@@ -70,7 +61,6 @@ $(document).ready(function(){
     }).done(function(response){
         displayPosts.setResourceName("posts");
         displayPosts.renderHandlebars();
-
     }).fail(function(){
       console.log("could not complete delete request");
     });
@@ -88,7 +78,6 @@ $(document).ready(function(){
     }).done(function(response){
         displayPosts.setResourceName("posts");
         displayPosts.renderHandlebars();
-
     }).fail(function(){
       console.log("could not complete delete request");
     });
@@ -113,24 +102,18 @@ $(document).ready(function(){
       if(textStatus === 'success'){
           // Successful signup!
           $('#signup-alert').html('<div id="signup-alert" class="alert alert-success role="alert"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="false"></span><span class="sr-only">Error:</span>thanks for signing up!</div>');
-
           setTimeout(function(){
             $('#signup-modal').modal('hide');
           }, 500);
-
         }else{
           console.log(textStatus)
           $('#signup-form').html('<div id="signup-alert" class="alert alert-danger" role="alert"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="false"></span><span class="sr-only">Error:</span> signup failed</div>');
         }
-
       }).fail(function(jqxhr, textStatus, errorThrown){
-
         $('#signup-alert').html('<div id="signup-alert" class="alert alert-danger" role="alert"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="false"></span><span class="sr-only">Error:</span> signup failed</div>');
         console.log(textStatus);
         console.log(errorThrown);
-
       });
-
     });
 
 
@@ -165,9 +148,6 @@ $(document).ready(function(){
             displayPosts.renderHandlebars();
           }, 500);
 
-
-            // eventually write a functionelsewhere that handles all the DOM stuff that happens when a user logs in/out, and just call that here
-
           }else{
 
             $('#login-form').html('<div id="login-alert" class="alert alert-danger" role="alert"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="false"></span><span class="sr-only">Error:</span> login failed</div>');
@@ -187,7 +167,6 @@ $(document).ready(function(){
       authenticateDOM.updateNavBar();
       authenticateDOM.allowCreatePost();
       displayPosts.renderHandlebars();
-
   });
 
 
