@@ -1,6 +1,5 @@
 $(document).ready(function(){
 
-
   // POST create a new post
   $('body').on('click','#new-post-submit', function(){
     if(validateInputs.post()){
@@ -27,7 +26,7 @@ $(document).ready(function(){
 
 // POST submit a reply on a post
   $('body').on('click', '.submit-reply', function(){
-    if (validateInputs.reply()) {
+    // if (validateInputs.reply()) { Disabled comment validation, pending bug fix.
       var thisPostID = $(this).data('post-id');
       var thisReplyVal = $('textarea.input-reply[data-post-id='+thisPostID+' ]').val();
        $.ajax({
@@ -47,7 +46,7 @@ $(document).ready(function(){
       }).fail(function(res){
         console.log("failed to post");
       });
-    };
+    // };
   });
 
 
