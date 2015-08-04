@@ -1,7 +1,7 @@
 "use strict";
 
-var apiURL = "http://localhost:3000"
-// "https://secret-bastion-8487.herokuapp.com/";
+var apiURL = "https://secret-bastion-8487.herokuapp.com/";
+
 
 Handlebars.registerHelper('each-reverse', function(context, options) {
     var ret = '';
