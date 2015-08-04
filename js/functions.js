@@ -1,6 +1,7 @@
 "use strict";
 
-var apiURL = "https://secret-bastion-8487.herokuapp.com/";
+var apiURL = "http://localhost:3000"
+// "https://secret-bastion-8487.herokuapp.com/";
 
 Handlebars.registerHelper('each-reverse', function(context, options) {
     var ret = '';
@@ -13,7 +14,7 @@ Handlebars.registerHelper('each-reverse', function(context, options) {
     }
     return ret;
 });
-
+// resource is unclear var name
 var displayPosts = (function(resource){
   var setResourceName = function(resName){
     resource = resName;
@@ -21,6 +22,8 @@ var displayPosts = (function(resource){
   var getResource = function(){
     $.get( apiURL+"/"+resource).done(function(response){
       _renderResourceEach(response);
+
+
     });
 
   };
@@ -32,22 +35,22 @@ var displayPosts = (function(resource){
     $('#'+resource+'-container').html(result);
 
 // DOM updates after handlebars renders
-	authenticateDOM.allowCreateComment();
+	 authenticateDOM.allowCreateComment();
     authenticateDOM.allowDeleteContent();
 
+    //FIX: this does not belong here!
     Date.prototype.addDays = function(days){
-	    var dat = new Date(this.valueOf());
-	    dat.setDate(dat.getDate() + days);
-	    return dat;
-	}
-
-	var today = new Date();
-	var defaultEnd = today.addDays(20);
+     var dat = new Date(this.valueOf());
+     dat.setDate(dat.getDate() + days);
+     return dat;
+   }
+   var today = new Date();
+   var defaultEnd = today.addDays(20);
 
     $('#start_date').datepicker('setDate', today);
     $('#end_date').datepicker('setDate', defaultEnd);
-
   };
+
   return {
     setResourceName: setResourceName,
     renderHandlebars: getResource
@@ -69,7 +72,6 @@ var displayPosts = (function(resource){
       }
     }
     var allowCreatePost = function(){
-      console.log(_userloggedIn());
       if(_userloggedIn()){
       	if(!$('#top').has('#create-post-form')){$('#create-post-form').remove();}
         $('#top').prepend(
@@ -90,6 +92,11 @@ var displayPosts = (function(resource){
                       </div> \
                     </div> \
                   </div> \
+                  <div class="col-md-6"> \
+                    <label for="input-category">Category</label> \
+                    <select id="category-select" class="form-control"> \
+                    </select> \
+                  </div> \
                 </div> \
               </div> \
               <div class="form-group"> \
@@ -100,6 +107,8 @@ var displayPosts = (function(resource){
             </form> \
         </div>'
         );
+        _generateCategoryList();
+
       } else{
         $('#create-post-form').remove()
       }
@@ -150,6 +159,21 @@ var displayPosts = (function(resource){
        // 4 hours later I learned that sometimes it's null and sometimes it's "null"
        return me !== "null" && me !== null;
     };
+
+
+    var _generateCategoryList = function(){
+      $.get( apiURL+"/categories").done(function(response){
+        response.forEach(function(e){
+          $('#category-select').append('<option value='+e.id+'>'+e.name+'</option>');
+        });
+
+
+      }).fail(function(res){
+        console.log(res);
+        console.log("failed to get categories")
+      });
+
+    }
 
 
     return {

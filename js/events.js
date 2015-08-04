@@ -14,6 +14,19 @@ $(document).ready(function(){
             }},
         headers: { Authorization: 'Token token=' + localStorage.getItem('token') }
       }).done(function(res){
+
+        $.ajax({
+          url: apiURL+"/categorizations",
+          type: 'POST',
+          data: {categorization: {
+                post_id: res.id,
+                category_id: $('#category-select').val()
+              }}
+        }).done(function(res){
+          console.log(res);
+          console.log("successfully categorized");
+        });
+
         // clear the fields
         $('#create-post-form input, #create-post-form textarea').val('');
           displayPosts.setResourceName("posts");
