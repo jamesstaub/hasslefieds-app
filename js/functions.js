@@ -21,8 +21,8 @@ var displayPosts = (function(resource){
   }
   var getResource = function(){
     $.get( apiURL+"/"+resource).done(function(response){
-      $('.loading').hide();
       _renderResourceEach(response);
+      $('.loading img').hide("slow");
     });
 
   };
