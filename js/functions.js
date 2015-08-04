@@ -21,7 +21,7 @@ var displayPosts = (function(resource){
   }
   var getResource = function(){
     $.get( apiURL+"/"+resource).done(function(response){
-      $('loading').hide();
+      $('.loading').hide();
       _renderResourceEach(response);
     });
 
